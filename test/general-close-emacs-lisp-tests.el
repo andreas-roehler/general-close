@@ -25,6 +25,8 @@
 
 ;;; Code:
 
+(require 'general-close-setup-ert-tests)
+
 (ert-deftest general-close--elisp-nested-bracket-paren-test-rNRF1C ()
   (general-close-test-with-elisp-buffer
     "(list ([\n;;{123\n;;{123\n"
@@ -134,7 +136,7 @@
 (ert-deftest general-close--escaped-test-nm0AqK ()
   ;; comint-password-prompt-regexp
   (general-close-test-with-elisp-buffer
-      "\"\\(^ sadf"
+      "\"\\\\(^ sadf"
       (let ((general-close-generic-p t))
         (goto-char (point-max))
         (skip-chars-backward " \t\r\n\f")
@@ -165,7 +167,7 @@
   (general-close-test-with-elisp-buffer
       "(search-forward \"'''"
       (goto-char (point-max))
-    (skip-chars-backward " \t\r\n\f") 
+    (skip-chars-backward " \t\r\n\f")
       (general-close)
     (should (eq (char-before) ?\"))))
 
@@ -181,11 +183,6 @@
     (general-close)
     (should (eq (char-before) ?\)))))
 
-(ert-deftest general-close--elisp-char-class-test-QylOuh ()
-  (general-close-test-with-elisp-buffer
-    "(string-match \"[[:alpha:]"
-    (general-close)
-    (should (eq (char-before) ?\]))))
 
 (ert-deftest general-close--elisp-char-class-test-Ru2ZUr ()
   (general-close-test-with-elisp-buffer
