@@ -3,3 +3,5 @@
 *~
 .cask
 befehle.org
+test/*-*.py
+*test/*.scala
