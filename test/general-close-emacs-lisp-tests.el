@@ -154,7 +154,7 @@
 (ert-deftest general-close--escaped-test-PbxFlK ()
   ;; comint-password-prompt-regexp
   (general-close-test-with-elisp-buffer
-      "\"\\(^ *\\|^Passwort: *\\|\\( SMB\\|'s\\|Bad\\|CVS\\|Enter\\(?: \\(?:\\(?:sam\\|th"
+      "\"\\\\(^ *\\\\|^Passwort: *\\\\|\\\\( SMB\\\\|'s\\\\|Bad\\\\|CVS\\\\|Enter\\\\(?: \\\\(?:\\\\(?:sam\\\\|th"
       (goto-char (point-max))
     (skip-chars-backward " \t\r\n\f")
       (let ((general-close-unary-delimiter-chars (list ?` ?\" ?+)))
