@@ -114,7 +114,6 @@
 
 ;; +BEGIN_QUOTE", "+BEGIN_VERSE", "+BEGIN_EXAMPLE" and "+BEGIN_SRC" to syntactic close? (Akin to C-] in latex-mode, when closing environments) So that would add a corresponding "+END_SRC", "+END_QUOT
 
-
 (ert-deftest general-close--ogham-feather-mark-close-lVxPDf ()
   (general-close-test-with-elisp-buffer
       "?\᚛"
@@ -151,7 +150,7 @@
 	(general-close)
 	(should (looking-back "\\\\)" (line-beginning-position))))))
 
-(ert-deftest general-close--escaped-test-PbxFlK ()
+(ert-deftest general-close--escaped-test-PbxFlKc ()
   ;; comint-password-prompt-regexp
   (general-close-test-with-elisp-buffer
       "\"\\\\(^ *\\\\|^Passwort: *\\\\|\\\\( SMB\\\\|'s\\\\|Bad\\\\|CVS\\\\|Enter\\\\(?: \\\\(?:\\\\(?:sam\\\\|th"
@@ -160,7 +159,6 @@
       (let ((general-close-unary-delimiter-chars (list ?` ?\" ?+)))
 	(general-close '(4))
 	(should (eq (char-before) ?\")))))
-
 
 (ert-deftest general-close--tqs-test-pBcUxG ()
   ;; comint-password-prompt-regexp
@@ -183,13 +181,11 @@
     (general-close)
     (should (eq (char-before) ?\)))))
 
-
 (ert-deftest general-close--elisp-char-class-test-Ru2ZUr ()
   (general-close-test-with-elisp-buffer
       "(string-match \"[[:alpha:]]\""
     (general-close)
     (should (eq (char-before) ?\)))))
-
 
 (provide 'general-close-emacs-lisp-tests)
 ;;; general-close-emacs-lisp-tests.el ends here

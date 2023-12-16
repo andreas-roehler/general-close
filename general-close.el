@@ -255,7 +255,7 @@ Default is t"
 
 (defvar general-close-modes (list
 			       'agda2-mode
-			       'emacs-lisp-mode
+			       ;; 'emacs-lisp-mode
 			       'html-mode
                                'haskell-mode
 			       'java-mode
@@ -596,7 +596,7 @@ Argument PPS should provide result of ‘parse-partial-sexp’."
               (or (and (not general-close-match-in-comment-p) (nth 4 pps))
                   (and (not general-close-match-in-string-p (nth 3 pps))))
             (goto-char (nth 8 pps)))))
-      (general-close--generic orig limit))))
+      (general-close--generic orig pps limit))))
 
 (defun general-close--special-refuse (escaped)
   "We try applying a generic function.
@@ -635,43 +635,52 @@ being just part of a regexp. "
                     (char-to-string (general-close--return-complement-char-maybe (char-after))))
           (char-to-string (general-close--return-complement-char-maybe (char-after))))))))
 
-(defun general-close--generic (orig limit)
+(defun general-close--generic (orig pps limit)
   (interactive)
-  (save-restriction
-    (when limit (narrow-to-region limit orig))
-    (let* ((pps (parse-partial-sexp limit (point)))
-           (escaped (if (nth 3 pps)
-                        (general-close--escaped-in-string-p)
-                      (general-close--escaped-p)))
-           (padding (when general-close-honor-padding-p (general-close--padding-maybe (1+ (point))))))
-      (cond
-       ;; ((looking-back (concat  "[" (regexp-quote general-close-end-delimiter) "]") (point-min))
-       ;;  (backward-sexp)
-       ;;  (general-close-intern--repeat orig pps limit))
-       ((and (nth 3 pps) (ignore-errors (equal (char-after) (nth 3 pps))) (nth 3 (parse-partial-sexp (point-min) (point))))
-        (char-to-string (nth 3 pps)))
-       ((member (char-before) general-close-end-delimiter-list)
-        (ar-backward-sexp)
-        (general-close-intern--repeat orig pps limit))
-       ((and
-         (or (looking-at (concat "[" general-close-beg-delimiter "]"))
-             (and
-              (looking-at (concat "[" general-close-delimiters-atpt "]+"))
-              ;; "[[:alpha:, refute last colon
-              (< (point) (1- orig))
-              ;; "[[:alpha:, refute first colon
-              (not (eq 0 (%  (count-matches (match-string-no-properties 0) (point) orig) 2)))))
-         (not (general-close--special-refuse escaped)))
-        (general-close--generic-splitted escaped padding
-                                         ;; limit pps
-                                         ;; general-close-beg-delimiter
-                                         ))
-       ;; ((looking-at (concat "[" general-close-delimiters-atpt "]+"))
-       ;;  (general-close--generic-splitted
-       ;;   ;; limit pps
-       ;;   ;; general-close-delimiters-atpt
-       ;;))
-       (t (general-close-intern--repeat orig pps limit))))))
+  (let (;; (pps (parse-partial-sexp limit (point)))
+        (escaped (if (nth 3 pps)
+                     (general-close--escaped-in-string-p)
+                   (general-close--escaped-p)))
+        (padding (when general-close-honor-padding-p (general-close--padding-maybe (1+ (point))))))
+    (cond
+     ((and (nth 3 pps) (ignore-errors (equal (char-after) (nth 3 pps)))(< (point) orig))
+      (char-to-string (nth 3 pps)))
+     ((and
+       (< (point) orig)
+       (or (looking-at (concat "[" general-close-beg-delimiter "]"))
+           (and
+            (looking-at (concat "[" general-close-delimiters-atpt "]+"))
+            ;; "[[:alpha:, refute last colon
+            ;; (< (point) (1- orig))
+            ;; "[[:alpha:, refute first colon
+            (not (eq 0 (%  (count-matches (match-string-no-properties 0) limit orig) 2)))))
+       (not (general-close--special-refuse escaped)))
+      (general-close--generic-splitted escaped padding
+                                       ;; limit pps
+                                       ;; general-close-beg-delimiter
+                                       ))
+     (t (unless (bobp)
+          (save-restriction
+            (when limit (narrow-to-region limit orig))
+
+            (cond
+             ((and (not (nth 3 pps)) (not (bobp)) (save-excursion (forward-char -1) (nth 3 (parse-partial-sexp limit (point)))))
+              (backward-sexp)
+              (general-close--generic orig pps limit))
+             ;; ((looking-back (concat  "[" (regexp-quote general-close-end-delimiter) "]") (point-min))
+             ;;  (backward-sexp)
+             ;;  (general-close-intern--repeat orig pps limit))
+
+             ((member (char-before) general-close-end-delimiter-list)
+              (ar-backward-sexp)
+              (general-close-intern--repeat orig pps limit))
+
+             ;; ((looking-at (concat "[" general-close-delimiters-atpt "]+"))
+             ;;  (general-close--generic-splitted
+             ;;   ;; limit pps
+             ;;   ;; general-close-delimiters-atpt
+             ;;))
+             (t (unless (bobp) (general-close-intern--repeat orig pps limit))))))))))
 
 (defun general-close--org-mode-close ()
   "Org mode specific closes."
@@ -679,7 +688,7 @@ being just part of a regexp. "
     (end-of-line)
     (newline))
   ;; +BEGIN_QUOTE
-  (when (save-excursion (and (re-search-backward "^#\\+\\([A-Z]+\\)_\\([A-Z]+\\)" nil t 1)(string= "BEGIN" (match-string-no-properties 1))))
+  (when (save-excursion (and (re-search-backward "^#\\+\\([A-Z]+\\)_\\([A-Z]+\\)" nil t 1) (string= "BEGIN" (match-string-no-properties 1))))
     (insert (concat "#+END_" (match-string-no-properties 2)))))
 
 ;; (defun general-close-emacs-lisp (orig pps limit)
@@ -694,7 +703,7 @@ being just part of a regexp. "
 ;;     (cond
 ;;      ;; ((and (not (nth 8 pps))(nth 1 pps))
 ;;      ;;  (general-close-pure-syntax pps))
-;;      ((general-close--generic orig limit)))))
+;;      ((general-close--generic orig pps limit)))))
 
 (defun general-close--paren-conditions (bracecounter bracketcounter parencounter)
   (cond
@@ -892,7 +901,7 @@ Optional argument PPS is result of a call to function ‘parse-partial-sexp’"
      ;; py-block-or-clause-re
      ((looking-back "[ 	]*\\_<\\(async \\(?:class\\|def\\|for\\|with\\)\\|c\\(?:ase\\|lass\\)\\|def\\|e\\(?:l\\(?:if\\|se\\)\\|xcept\\)\\|f\\(?:inally\\|or\\)\\|if\\|match\\|try\\|w\\(?:hile\\|ith\\)\\)\\_>[( 	]*.*" (line-beginning-position))
       ":")
-     (t (general-close--generic orig limit)))))
+     (t (general-close--generic orig pps limit)))))
 
 ;; nil
 ;; 				  (if (functionp 'py--beginning-of-statement-position)
@@ -910,7 +919,7 @@ Optional argument PPS is result of a call to function ‘parse-partial-sexp’"
       (general-close-generic-forms orig limit pps))
      ((nth 1 pps)
       (general-close-pure-syntax pps))
-     (t (general-close--generic orig limit)))))
+     (t (general-close--generic orig pps limit)))))
 
 ;; Ruby
 (defun general-close--ruby ()
@@ -1014,7 +1023,7 @@ Source: Odersky, Spoon, Venners: Programming in Scala"
            (eq (char-before) 41))
       ":")
 
-     (t (general-close--generic orig limit)))))
+     (t (general-close--generic orig pps limit)))))
 
 (defun general-close-shell-close (orig pps limit)
   "Optional argument PPS is result of a call to function ‘parse-partial-sexp’"
@@ -1025,7 +1034,7 @@ Source: Odersky, Spoon, Venners: Programming in Scala"
       (general-close-generic-forms orig limit pps))
      ((nth 1 pps)
       (general-close-pure-syntax pps))
-     (t (general-close--generic orig limit))
+     (t (general-close--generic orig pps limit))
      )))
 
 (defun general-close--semicolon-modes (orig pps limit)
@@ -1040,7 +1049,7 @@ Argument PPS, the result of ‘parse-partial-sexp’."
 		  (and (nth 1 pps) (general-close-pure-syntax pps))))
                ((looking-back general-close-import-re (line-beginning-position))
                 ";")
-	       (t (general-close--generic orig limit)))))
+	       (t (general-close--generic orig pps limit)))))
     (cond
      ((and closer (string-match "}" closer))
       (if (save-excursion (skip-chars-backward " \t\r\n\f" limit) (member (char-before) (list ?\; ?})))
@@ -1062,7 +1071,7 @@ Argument PPS, the result of ‘parse-partial-sexp’."
     (`agda2-mode
      (general-close-haskell orig pps limit))
     (`emacs-lisp-mode
-     (general-close--generic orig limit))
+     (general-close--generic orig pps limit))
      ;; (general-close-emacs-lisp orig pps limit))
     (`html-mode
      (general-close-ml))
@@ -1075,11 +1084,11 @@ Argument PPS, the result of ‘parse-partial-sexp’."
     (`nxml-mode
      (general-close--finish-element))
     (`org-mode
-     (general-close--generic orig limit))
+     (general-close--generic orig pps limit))
     (`python-mode
      (general-close-python-close orig limit pps))
     (`prolog-mode
-     (general-close--generic orig limit))
+     (general-close--generic orig pps limit))
     (`ruby-mode
      (general-close-ruby-close orig pps))
     (`scala-mode
@@ -1120,14 +1129,14 @@ Argument PPS, the result of ‘parse-partial-sexp’."
 (defun general-close-generic-forms (orig limit pps)
   "Argument PPS, the result of ‘parse-partial-sexp’."
   (cond
-   ((general-close--generic orig limit))
+   ((general-close--generic orig pps limit))
    ((nth 4 pps)
     ;; in comment
     (general-close--insert-comment-end-maybe orig pps))))
 
   ;; (cond
   ;;       ((general-close-pure-syntax pps))
-  ;;       ((general-close--generic orig limit))
+  ;;       ((general-close--generic orig pps limit))
   ;;       ))
 
 (defun general-close-intern (orig iact pps limit)
@@ -1144,7 +1153,7 @@ Optional argument PPS, the result of ‘parse-partial-sexp’."
                 (general-close--insert-comment-end-maybe orig pps))
 	       ((member major-mode general-close-modes)
 	        (general-close--modes orig pps limit))
-	       (t (general-close--generic orig limit)))))
+	       (t (general-close--generic orig pps limit)))))
     ;; insert might be hardcoded like in ‘nxml-finish-element-1’
     (when (and closer (stringp closer))
       (goto-char orig)
@@ -1189,10 +1198,10 @@ Argument PPS, the result of ‘parse-partial-sexp’."
 	 (arg (or arg 1))
          (general-close-delimiters-atpt (general-close-update-delimiters)))
     (pcase (prefix-numeric-value arg)
-      (4 (while (general-close-intern (setq orig (copy-marker (point))) iact pps limit))
-	 (< orig (point)))
+      (4 (while (general-close))
+	 (unless (< orig (point)) (progn (goto-char orig) nil)))
       (_ (general-close-intern orig iact pps limit)
-         (< orig (point))))))
+         (if (< orig (point)) (point) (progn (goto-char orig) nil))))))
 
 (provide 'general-close)
 ;;; general-close.el ends here
