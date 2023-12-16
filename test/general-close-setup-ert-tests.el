@@ -71,33 +71,33 @@ BODY is code to be executed within the temp buffer.  Point is
 	 (switch-to-buffer (current-buffer)))
        ,@body)))
 
-;; (defmacro general-close-test-with-python-buffer (contents &rest body)
-;;   "Create temp buffer in `python-mode' inserting CONTENTS.
-;; BODY is code to be executed within the temp buffer.  Point is
-;;  at the beginning of buffer."
-;;   (declare (indent 1) (debug t))
-;;   `(with-temp-buffer
-;;      (let (hs-minor-mode)
-;;        (insert ,contents)
-;;        (python-mode)
-;;        (when ,general-close-debug-p
-;; 	 (switch-to-buffer (current-buffer)))
-;;        ,@body)))
+(defmacro general-close-test-with-python-buffer (contents &rest body)
+  "Create temp buffer in `python-mode' inserting CONTENTS.
+BODY is code to be executed within the temp buffer.  Point is
+ at the beginning of buffer."
+  (declare (indent 1) (debug t))
+  `(with-temp-buffer
+     (let (hs-minor-mode)
+       (insert ,contents)
+       (python-mode)
+       (when ,general-close-debug-p
+	 (switch-to-buffer (current-buffer)))
+       ,@body)))
 
-;; (defmacro general-close-test-with-python-buffer-point-min (contents &rest body)
-;;   "Create temp buffer in `python-mode' inserting CONTENTS.
-;; BODY is code to be executed within the temp buffer.  Point is
-;;  at the beginning of buffer."
-;;   (declare (indent 1) (debug t))
-;;   `(with-temp-buffer
-;;      ;; (and (featurep 'python) (unload-feature 'python))
-;;      (let (hs-minor-mode)
-;;        (insert ,contents)
-;;        (python-mode)
-;;        (goto-char (point-min))
-;;        (when general-close-debug-p (switch-to-buffer (current-buffer)))
-;;        ,@body)
-;;      ))
+(defmacro general-close-test-with-python-buffer-point-min (contents &rest body)
+  "Create temp buffer in `python-mode' inserting CONTENTS.
+BODY is code to be executed within the temp buffer.  Point is
+ at the beginning of buffer."
+  (declare (indent 1) (debug t))
+  `(with-temp-buffer
+     ;; (and (featurep 'python) (unload-feature 'python))
+     (let (hs-minor-mode)
+       (insert ,contents)
+       (python-mode)
+       (goto-char (point-min))
+       (when general-close-debug-p (switch-to-buffer (current-buffer)))
+       ,@body)
+     ))
 
 ;; (defmacro general-close-test-with-php-buffer (contents &rest body)
 ;;   "Create temp buffer in `php-mode' inserting CONTENTS.
