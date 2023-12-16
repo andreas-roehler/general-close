@@ -27,7 +27,7 @@
 ;;; Code:
 
 (ert-deftest general-close--elisp-org-quote-OkuWXL ()
-  (general-close-test-with-elisp-buffer
+  (general-close-test
       "#+BEGIN_QUOTE
 asdf"
       'org-mode

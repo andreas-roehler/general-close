@@ -682,14 +682,21 @@ being just part of a regexp. "
              ;;))
              (t (unless (bobp) (general-close-intern--repeat orig pps limit))))))))))
 
-(defun general-close--org-mode-close ()
+(defun general-close--org-mode-close (orig pps limit)
   "Org mode specific closes."
-  (unless (empty-line-p)
-    (end-of-line)
-    (newline))
   ;; +BEGIN_QUOTE
-  (when (save-excursion (and (re-search-backward "^#\\+\\([A-Z]+\\)_\\([A-Z]+\\)" nil t 1) (string= "BEGIN" (match-string-no-properties 1))))
-    (insert (concat "#+END_" (match-string-no-properties 2)))))
+  (unless (or (nth 8 pps) (nth 3 pps) (nth 1 pps) (nth 4 pps))
+    (if (save-excursion
+          (and (re-search-backward "^#\\+\\([A-Z]+\\)_\\([A-Z]+\\)" limit t 1)
+               (string= "BEGIN" (match-string-no-properties 1))))
+        (progn
+          (unless (empty-line-p)
+            (end-of-line)
+            (newline))
+          (insert (concat "#+END_" (match-string-no-properties 2)))
+          t)
+      (goto-char orig)))
+  )
 
 ;; (defun general-close-emacs-lisp (orig pps limit)
 ;;   "Close in Emacs Lisp.
@@ -1072,7 +1079,7 @@ Argument PPS, the result of ‘parse-partial-sexp’."
      (general-close-haskell orig pps limit))
     (`emacs-lisp-mode
      (general-close--generic orig pps limit))
-     ;; (general-close-emacs-lisp orig pps limit))
+    ;; (general-close-emacs-lisp orig pps limit))
     (`html-mode
      (general-close-ml))
     (`haskell-mode
@@ -1084,7 +1091,10 @@ Argument PPS, the result of ‘parse-partial-sexp’."
     (`nxml-mode
      (general-close--finish-element))
     (`org-mode
-     (general-close--generic orig pps limit))
+     (or
+      (general-close--org-mode-close orig pps limit)
+      (general-close--generic orig pps limit)
+      ))
     (`python-mode
      (general-close-python-close orig limit pps))
     (`prolog-mode
