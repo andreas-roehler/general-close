@@ -87,3 +87,5 @@ test/general-close-xml-1-test.xml
 test/operator-mode-ruby-test-gszMLh.rb
 test/test.py
 test/while.el
+*-?.log
+*-?.txt
