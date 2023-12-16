@@ -99,32 +99,32 @@ BODY is code to be executed within the temp buffer.  Point is
        ,@body)
      ))
 
-;; (defmacro general-close-test-with-php-buffer (contents &rest body)
-;;   "Create temp buffer in `php-mode' inserting CONTENTS.
-;; BODY is code to be executed within the temp buffer.  Point is
-;;  at the end of buffer."
-;;   (declare (indent 1) (debug t))
-;;   `(with-temp-buffer
-;;      (let (hs-minor-mode)
-;;        (php-mode)
-;;        (insert ,contents)
-;;        (when general-close-debug-p
-;; 	 (switch-to-buffer (current-buffer)))
-;;        ,@body)))
+(defmacro general-close-test-with-php-buffer (contents &rest body)
+  "Create temp buffer in `php-mode' inserting CONTENTS.
+BODY is code to be executed within the temp buffer.  Point is
+ at the end of buffer."
+  (declare (indent 1) (debug t))
+  `(with-temp-buffer
+     (let (hs-minor-mode)
+       (php-mode)
+       (insert ,contents)
+       (when general-close-debug-p
+	 (switch-to-buffer (current-buffer)))
+       ,@body)))
 
-;; (defmacro general-close-test-with-php-buffer-point-min (contents &rest body)
-;;   "Create temp buffer in `php-mode' inserting CONTENTS.
-;; BODY is code to be executed within the temp buffer.  Point is
-;;  at the beginning of buffer."
-;;   (declare (indent 1) (debug t))
-;;   `(with-temp-buffer
-;;      (let (hs-minor-mode)
-;;        (php-mode)
-;;        (insert ,contents)
-;;        (goto-char (point-min))
-;;        (when general-close-debug-p
-;; 	 (switch-to-buffer (current-buffer)))
-;;        ,@body)))
+(defmacro general-close-test-with-php-buffer-point-min (contents &rest body)
+  "Create temp buffer in `php-mode' inserting CONTENTS.
+BODY is code to be executed within the temp buffer.  Point is
+ at the beginning of buffer."
+  (declare (indent 1) (debug t))
+  `(with-temp-buffer
+     (let (hs-minor-mode)
+       (php-mode)
+       (insert ,contents)
+       (goto-char (point-min))
+       (when general-close-debug-p
+	 (switch-to-buffer (current-buffer)))
+       ,@body)))
 
 ;; (defmacro general-close-test-with-ruby-buffer (contents &rest body)
 ;;   "Create temp buffer in `ruby-mode' inserting CONTENTS.
@@ -222,118 +222,118 @@ BODY is code to be executed within the temp buffer.  Point is
 ;; 	 (switch-to-buffer (current-buffer)))
 ;;        ,@body)))
 
-;; (defmacro general-close-test-with-nxml-buffer (contents &rest body)
-;;   "Create temp buffer in `nxml-mode' inserting CONTENTS.
-;; BODY is code to be executed within the temp buffer.  Point is
-;;  at the end of buffer."
-;;   (declare (indent 1) (debug t))
-;;   `(with-temp-buffer
-;;      (let (hs-minor-mode)
-;;        (nxml-mode)
-;;        (insert ,contents)
-;;        (when general-close-debug-p
-;; 	 (switch-to-buffer (current-buffer)))
-;;        ,@body)))
+(defmacro general-close-test-with-nxml-buffer (contents &rest body)
+  "Create temp buffer in `nxml-mode' inserting CONTENTS.
+BODY is code to be executed within the temp buffer.  Point is
+ at the end of buffer."
+  (declare (indent 1) (debug t))
+  `(with-temp-buffer
+     (let (hs-minor-mode)
+       (nxml-mode)
+       (insert ,contents)
+       (when general-close-debug-p
+	 (switch-to-buffer (current-buffer)))
+       ,@body)))
 
-;; (defmacro general-close-test-with-html-buffer (contents &rest body)
-;;   "Create temp buffer inserting CONTENTS.
-;; BODY is code to be executed within the temp buffer.  Point is
-;;  at the end of buffer."
-;;   (declare (indent 1) (debug t))
-;;   `(with-temp-buffer
-;;      (let (hs-minor-mode)
-;;        (html-mode)
-;;        (insert ,contents)
-;;        (when general-close-debug-p
-;; 	 (switch-to-buffer (current-buffer)))
-;;        ,@body)))
+(defmacro general-close-test-with-html-buffer (contents &rest body)
+  "Create temp buffer inserting CONTENTS.
+BODY is code to be executed within the temp buffer.  Point is
+ at the end of buffer."
+  (declare (indent 1) (debug t))
+  `(with-temp-buffer
+     (let (hs-minor-mode)
+       (html-mode)
+       (insert ,contents)
+       (when general-close-debug-p
+	 (switch-to-buffer (current-buffer)))
+       ,@body)))
 
-;; (defmacro general-close-test-with-haskell-buffer (contents &rest body)
-;;   "Create temp buffer in `haskell-mode' inserting CONTENTS.
-;; BODY is code to be executed within the temp buffer.  Point is
-;;  at the beginning of buffer."
-;;   (declare (indent 1) (debug t))
-;;   `(with-temp-buffer
-;;      (let (hs-minor-mode)
-;;        (insert ,contents)
-;;        (haskell-mode)
-;;        (when general-close-debug-p
-;; 	 (switch-to-buffer (current-buffer)))
-;;        ,@body)
-;;      ;; (sit-for 0.1)
-;;      ))
+(defmacro general-close-test-with-haskell-buffer (contents &rest body)
+  "Create temp buffer in `haskell-mode' inserting CONTENTS.
+BODY is code to be executed within the temp buffer.  Point is
+ at the beginning of buffer."
+  (declare (indent 1) (debug t))
+  `(with-temp-buffer
+     (let (hs-minor-mode)
+       (insert ,contents)
+       (haskell-mode)
+       (when general-close-debug-p
+	 (switch-to-buffer (current-buffer)))
+       ,@body)
+     ;; (sit-for 0.1)
+     ))
 
-;; (defmacro general-close-test-with-haskell-buffer-point-min (contents &rest body)
-;;   "Create temp buffer in `haskell-mode' inserting CONTENTS.
-;; BODY is code to be executed within the temp buffer.  Point is
-;;  at the beginning of buffer."
-;;   (declare (indent 1) (debug t))
-;;   `(with-temp-buffer
-;;      (let (hs-minor-mode)
-;;        (insert ,contents)
-;;        (haskell-mode)
-;;        ;; (message "fill-paragraph-function: %s" fill-paragraph-function)
-;;        (goto-char (point-min))
-;;        (when general-close-debug-p
-;; 	 (switch-to-buffer (current-buffer)))
-;;        ,@body)
-;;      ;; (sit-for 0.1)
-;;      ))
+(defmacro general-close-test-with-haskell-buffer-point-min (contents &rest body)
+  "Create temp buffer in `haskell-mode' inserting CONTENTS.
+BODY is code to be executed within the temp buffer.  Point is
+ at the beginning of buffer."
+  (declare (indent 1) (debug t))
+  `(with-temp-buffer
+     (let (hs-minor-mode)
+       (insert ,contents)
+       (haskell-mode)
+       ;; (message "fill-paragraph-function: %s" fill-paragraph-function)
+       (goto-char (point-min))
+       (when general-close-debug-p
+	 (switch-to-buffer (current-buffer)))
+       ,@body)
+     ;; (sit-for 0.1)
+     ))
 
 
-;; (defmacro general-close-test-with-shell-script-buffer (contents &rest body)
-;;   "Create temp buffer inserting CONTENTS.
-;; BODY is code to be executed within the temp buffer.  Point is
-;;  at the end of buffer."
-;;   (declare (indent 2) (debug t))
-;;   `(with-temp-buffer
-;;      (let (hs-minor-mode)
-;;        (insert ,contents)
-;;        (shell-script-mode)
-;;        (when general-close-debug-p
-;; 	 (switch-to-buffer (current-buffer)))
-;;        ,@body)))
+(defmacro general-close-test-with-shell-script-buffer (contents &rest body)
+  "Create temp buffer inserting CONTENTS.
+BODY is code to be executed within the temp buffer.  Point is
+ at the end of buffer."
+  (declare (indent 2) (debug t))
+  `(with-temp-buffer
+     (let (hs-minor-mode)
+       (insert ,contents)
+       (shell-script-mode)
+       (when general-close-debug-p
+	 (switch-to-buffer (current-buffer)))
+       ,@body)))
 
-;; (defmacro general-close-test-with-shell-script-buffer-point-min (contents &rest body)
-;;   "Create temp buffer inserting CONTENTS.
-;; BODY is code to be executed within the temp buffer.  Point is
-;;  at the end of buffer."
-;;   (declare (indent 2) (debug t))
-;;   `(with-temp-buffer
-;;      (let (hs-minor-mode)
-;;        (insert ,contents)
-;;        (shell-script-mode)
-;;        (goto-char (point-min))
-;;        (when general-close-debug-p
-;; 	 (switch-to-buffer (current-buffer)))
-;;        ,@body)))
+(defmacro general-close-test-with-shell-script-buffer-point-min (contents &rest body)
+  "Create temp buffer inserting CONTENTS.
+BODY is code to be executed within the temp buffer.  Point is
+ at the end of buffer."
+  (declare (indent 2) (debug t))
+  `(with-temp-buffer
+     (let (hs-minor-mode)
+       (insert ,contents)
+       (shell-script-mode)
+       (goto-char (point-min))
+       (when general-close-debug-p
+	 (switch-to-buffer (current-buffer)))
+       ,@body)))
 
-;; (defmacro general-close-test-with-xml-buffer (contents &rest body)
-;;   "Create temp buffer in `xml-mode' inserting CONTENTS.
-;; BODY is code to be executed within the temp buffer.  Point is
-;;  at the beginning of buffer."
-;;   (declare (indent 1) (debug t))
-;;   `(with-temp-buffer
-;;      (let (hs-minor-mode)
-;;        (nxml-mode)
-;;        (insert ,contents)
-;;        (when general-close-debug-p
-;; 	 (switch-to-buffer (current-buffer)))
-;;        ,@body)))
+(defmacro general-close-test-with-xml-buffer (contents &rest body)
+  "Create temp buffer in `xml-mode' inserting CONTENTS.
+BODY is code to be executed within the temp buffer.  Point is
+ at the beginning of buffer."
+  (declare (indent 1) (debug t))
+  `(with-temp-buffer
+     (let (hs-minor-mode)
+       (nxml-mode)
+       (insert ,contents)
+       (when general-close-debug-p
+	 (switch-to-buffer (current-buffer)))
+       ,@body)))
 
-;; (defmacro general-close-test-with-xml-buffer-point-min (contents &rest body)
-;;   "Create temp buffer inserting CONTENTS.
-;; BODY is code to be executed within the temp buffer.  Point is
-;;  at the beginning of buffer."
-;;   (declare (indent 1) (debug t))
-;;   `(with-temp-buffer
-;;      (let (hs-minor-mode)
-;;        (nxml-mode)
-;;        (insert ,contents)
-;;        (goto-char (point-min))
-;;        (when general-close-debug-p
-;; 	 (switch-to-buffer (current-buffer)))
-;;        ,@body)))
+(defmacro general-close-test-with-xml-buffer-point-min (contents &rest body)
+  "Create temp buffer inserting CONTENTS.
+BODY is code to be executed within the temp buffer.  Point is
+ at the beginning of buffer."
+  (declare (indent 1) (debug t))
+  `(with-temp-buffer
+     (let (hs-minor-mode)
+       (nxml-mode)
+       (insert ,contents)
+       (goto-char (point-min))
+       (when general-close-debug-p
+	 (switch-to-buffer (current-buffer)))
+       ,@body)))
 
 (provide 'general-close-setup-ert-tests)
 ;; general-close-setup-ert-tests.el ends here

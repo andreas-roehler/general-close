@@ -301,6 +301,9 @@ Default is t"
 
 (setq general-close-funcdef-re     "^[ \t]*def[ \t]+[[:alnum:]_]+([^()]+)")
 
+(defvar general-close-if-re   "^[ \t]*if[ \t]+.+" "")
+(setq general-close-if-re   "^[ \t]*if[ \t]+.+")
+
 (unless (boundp 'py-block-re)
   (defvar py-block-re "[ \t]*\\_<\\(class\\|def\\|async def\\|async for\\|for\\|if\\|try\\|while\\|with\\|async with\\)\\_>[:( \n\t]*"
   "Matches the beginning of a compound statement. "))
@@ -1020,7 +1023,10 @@ Source: Odersky, Spoon, Venners: Programming in Scala"
                     ;; val foo =  this.totalFoo(Seq(("apple", 2))
                     ;; select ";" if opening paren is not at same line
                    (< (save-excursion (goto-char (nth 1 pps))(count-lines (point-min) (line-end-position))) (count-lines (point-min) (line-end-position)))
-                    (looking-back general-close-assignment-re (line-beginning-position)))
+                   (or
+                    (looking-back general-close-if-re (line-beginning-position))
+                    (looking-back general-close-assignment-re (line-beginning-position))
+                   ))
               ";"
             (general-close-pure-syntax pps))
         (general-close-pure-syntax pps)))
