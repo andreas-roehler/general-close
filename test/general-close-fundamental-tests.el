@@ -22,7 +22,7 @@
 
 ;;; Commentary:
 
-;; 
+;;
 
 ;;; Code:
 
@@ -32,6 +32,14 @@
     'fundamental-mode
     general-close-debug-p
     (general-close)
+    (should (looking-back "asdf}" (line-beginning-position)))))
+
+(ert-deftest general-close--multibrace-fundamental-test-TN19Yp ()
+  (general-close-test
+      "{{{{asdf"
+    'fundamental-mode
+    general-close-debug-p
+    (general-close '(4))
     (should (looking-back "asdf}}}}" (line-beginning-position)))))
 
 (ert-deftest general-close--multibrace-unary-fundamental-test-JM8aED ()
@@ -59,6 +67,15 @@ foo
 "   'fundamental-mode
     general-close-debug-p
     (general-close)
+    (should (looking-back "`" (line-beginning-position)))))
+
+(ert-deftest general-close--triple-grave-accent-test-xmKyKB ()
+  (general-close-test
+      "```
+foo
+"   'fundamental-mode
+    general-close-debug-p
+    (general-close '(4))
     (should (looking-back "```" (line-beginning-position)))))
 
 (provide 'general-close-fundamental-tests)
