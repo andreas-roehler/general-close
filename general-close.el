@@ -488,16 +488,27 @@ END the comment end"
     (goto-char orig)
     (newline-and-indent)))
 
+;; (defun general-close--string-fence (orig)
+;;   "Closing a string fence."
+;;   (cond
+;;    ((looking-at "\\/\\*")
+;;     (general-close--string-fence-intern orig "/*" "*/"))
+;;    ((looking-at "{-# ")
+;;     (general-close--string-fence-intern orig "{-# " " #-}"))
+;;    ((looking-at "{- ")
+;;     (general-close--string-fence-intern orig "{- " " -}"))
+;;    ))
+
 (defun general-close--string-fence (orig)
   "Closing a string fence."
   (cond
    ((looking-at "\\/\\*")
-    (general-close--string-fence-intern orig "/*" "*/"))
+    "*/")
    ((looking-at "{-# ")
-    (general-close--string-fence-intern orig "{-# " " #-}"))
+    " #-}")
    ((looking-at "{- ")
-    (general-close--string-fence-intern orig "{- " " -}"))
-   ))
+    " -}")
+   (t (match-string-no-properties 0))))
 
 (defun general-close--insert-comment-end-maybe (orig pps)
   "Insert comment end.
@@ -654,14 +665,18 @@ being just part of a regexp. "
       (general-close--generic-splitted escaped padding))
      ((and
        (< (point) orig)
-       (looking-at (concat "[" general-close-unary-delimiters-atpt "]+")))
+       (looking-at (concat "[" general-close-unary-delimiters-atpt "]+"))
+       (not
+        (or
+         ;; (member (list 'asdf
+         (eq (car-safe (syntax-after (point))) 6)
+         (eq 0 (%  (count-matches (match-string-no-properties 0) limit orig) 2))))
       ;; (forward-char -1)
       (skip-chars-backward general-close-unary-delimiters-atpt)
       ;; "[[:alpha:, refute last colon
       ;; (< (point) (1- orig))
       ;; "[[:alpha:, refute first colon
-      (not (eq 0 (%  (count-matches (match-string-no-properties 0) limit orig) 2)))
-      (looking-at (concat "[" general-close-unary-delimiters-atpt "]+"))
+      (looking-at (concat "[" general-close-unary-delimiters-atpt "]+")))
       ;; (not (general-close--special-refuse escaped))
       (general-close--generic-splitted escaped padding))
      (t (unless (bobp)

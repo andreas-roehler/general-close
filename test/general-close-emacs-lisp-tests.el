@@ -90,14 +90,14 @@
       (general-close)
     (should (looking-back "asdf ()" (line-beginning-position)))))
 
-(ert-deftest general-close-electric-delete-whitespace-test-x7Ax7w ()
+(ert-deftest general-close--electric-delete-whitespace-test-x7Ax7w ()
   (general-close-test-with-elisp-buffer
       "(defun asdf ( "
       (let ((general-close-electric-delete-whitespace-p t))
 	(general-close)
 	(should (looking-back "asdf ()")))))
 
-(ert-deftest general-close-electric-delete-whitespace-test-p0vsKD ()
+(ert-deftest general-close--electric-delete-whitespace-test-p0vsKD ()
   (general-close-test-with-elisp-buffer
       "(defun asdf ( "
       (let ((general-close-electric-delete-whitespace-p nil))
