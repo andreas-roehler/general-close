@@ -166,35 +166,35 @@ BODY is code to be executed within the temp buffer.  Point is
 	 (switch-to-buffer (current-buffer)))
        ,@body)))
 
-;; (defmacro general-close-test-with-js-buffer (contents &rest body)
-;;   "Create temp buffer in `js-mode' inserting CONTENTS.
-;; BODY is code to be executed within the temp buffer.  Point is
-;;  at the end of buffer."
-;;   (declare (indent 1) (debug t))
-;;   `(with-temp-buffer
-;;      (let (hs-minor-mode)
-;;        (insert ,contents)
-;;        (js-mode)
-;;        (goto-char (point-max))
-;;        (when general-close-debug-p
-;; 	 (switch-to-buffer (current-buffer))
-;; 	 (font-lock-fontify-region (point-min) (point-max)))
-;;        ,@body)))
+(defmacro general-close-test-with-js-buffer (contents &rest body)
+  "Create temp buffer in `js-mode' inserting CONTENTS.
+BODY is code to be executed within the temp buffer.  Point is
+ at the end of buffer."
+  (declare (indent 1) (debug t))
+  `(with-temp-buffer
+     (let (hs-minor-mode)
+       (insert ,contents)
+       (js-mode)
+       (goto-char (point-max))
+       (when general-close-debug-p
+	 (switch-to-buffer (current-buffer))
+	 (font-lock-fontify-region (point-min) (point-max)))
+       ,@body)))
 
-;; (defmacro general-close-test-with-js-buffer-point-min (contents &rest body)
-;;   "Create temp buffer in `js-mode' inserting CONTENTS.
-;; BODY is code to be executed within the temp buffer.  Point is
-;;  at the beginning of buffer."
-;;   (declare (indent 1) (debug t))
-;;   `(with-temp-buffer
-;;      ;;     (and (featurep 'js) (unload-feature 'js))
-;;      (let (hs-minor-mode)
-;;        (insert ,contents)
-;;        (js-mode)
-;;        (goto-char (point-min))
-;;        (when general-close-debug-p
-;; 	 (switch-to-buffer (current-buffer)))
-;;        ,@body)))
+(defmacro general-close-test-with-js-buffer-point-min (contents &rest body)
+  "Create temp buffer in `js-mode' inserting CONTENTS.
+BODY is code to be executed within the temp buffer.  Point is
+ at the beginning of buffer."
+  (declare (indent 1) (debug t))
+  `(with-temp-buffer
+     ;;     (and (featurep 'js) (unload-feature 'js))
+     (let (hs-minor-mode)
+       (insert ,contents)
+       (js-mode)
+       (goto-char (point-min))
+       (when general-close-debug-p
+	 (switch-to-buffer (current-buffer)))
+       ,@body)))
 
 
 ;; (defmacro general-close-test-with-temp-buffer (contents &rest body)

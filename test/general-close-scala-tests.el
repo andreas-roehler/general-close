@@ -187,5 +187,20 @@ Comment ends"
     (should (eq (char-before  (1- (point))) ?\)))
     ))
 
+(ert-deftest general-close-scala-test-59JrgX ()
+  (general-close-test
+      "val foo = \"\"\"This is
+a multiline
+String"
+    'scala-mode
+    general-close-debug-p
+    (goto-char (point-max))
+    (skip-chars-backward " \t\r\n\f")
+    (general-close)
+    (should (eq (char-before) ?\"))
+    (should (eq (char-before (1- (point))) ?\"))))
+
+
+
 (provide 'general-close-scala-tests)
 ;;; general-close-scala-tests.el ends here

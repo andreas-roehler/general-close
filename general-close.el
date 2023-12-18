@@ -1,7 +1,10 @@
 ;;; general-close.el --- Insert closing delimiter -*- lexical-binding: t; -*-
 
 ;; Author: Andreas Röhler <andreas.roehler@online.de>
-;;     Emacs User Group Berlin <emacs-berlin@emacs-berl
+;;     Emacs User Group Berlin <emacs-berlin@emacs-berlin.org>
+
+;; A first draft was published at emacs-devel list:
+;; http://lists.gnu.org/archive/html/emacs-devel/2013-09/msg00512.html
 
 ;; Version: 0.1
 
@@ -28,9 +31,6 @@
 ;; M-x general-close RET: close any syntactic element.
 
 ;; ['a','b' ==> ['a','b']
-
-;; A first draft was published at emacs-devel list:
-;; http://lists.gnu.org/archive/html/emacs-devel/2013-09/msg00512.html
 
 ;;; Code:
 
@@ -122,7 +122,6 @@ Argument LIMIT lower border."
     (when (eq (char-before) general-close--escape-char)
       (buffer-substring-no-properties (point) (progn (skip-chars-backward (char-to-string general-close--escape-char) limit)(1- (point)))))))
 
-
 (defun general-close--string-before-list-maybe (pps)
   "String inside a list needs to be closed first maybe.
 
@@ -172,7 +171,7 @@ Argument PPS is result of ‘parse-partial-sexp’"
        ((nth 3 pps)
 	(goto-char (nth 8 pps))
 	(backward-prefix-chars)
-	(setq closer (buffer-substring-no-properties (point) (progn (skip-chars-forward (char-to-string (nth 3 pps)))(point))))
+	(setq closer (buffer-substring-no-properties (point) (progn (skip-chars-forward (char-to-string (char-after)))(point))))
 	(when general-close-honor-padding-p (setq padding (general-close--padding-maybe (1+ (point))))))
        ((nth 1 pps)
 	(goto-char (nth 1 pps))
@@ -687,7 +686,7 @@ being just part of a regexp. "
               (backward-sexp)
               (general-close--generic orig pps limit))
              ((member (char-before) general-close-end-delimiter-list)
-              (ar-backward-sexp)
+              (backward-sexp)
               (general-close-intern--repeat orig pps limit))
              (t (unless (bobp) (general-close-intern--repeat orig pps limit))))))))))
 
